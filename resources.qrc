@@ -1,0 +1,26 @@
+<!--<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/">
+        <file alias="learn_english_background.png">android/assets/resources/learn_english_background.png</file>
+        <file alias="dictionary_level1.json">android/assets/resources/dictionary_level1.json</file>
+        <file alias="dictionary_level2.json">android/assets/resources/dictionary_level2.json</file>
+        <file alias="dictionary_level3.json">android/assets/resources/dictionary_level3.json</file>
+        <file alias="dictionary_level4.json">android/assets/resources/dictionary_level4.json</file>
+        <file alias="dictionary_level5.json">android/assets/resources/dictionary_level5.json</file>
+    </qresource>
+</RCC>-->
+
+
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/">
+        <file>qml/Main.qml</file>
+        <file>qml/DifficultyWindow.qml</file>
+        <file alias="learn_english_background.png">android/assets/resources/learn_english_background.png</file>
+        <file alias="dictionary_level1.json">android/assets/resources/dictionary_level1.json</file>
+        <file alias="dictionary_level2.json">android/assets/resources/dictionary_level2.json</file>
+        <file alias="dictionary_level3.json">android/assets/resources/dictionary_level3.json</file>
+        <file alias="dictionary_level4.json">android/assets/resources/dictionary_level4.json</file>
+        <file alias="dictionary_level5.json">android/assets/resources/dictionary_level5.json</file>
+    </qresource>
+</RCC>
