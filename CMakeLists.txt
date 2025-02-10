@@ -24,8 +24,6 @@ qt_add_executable(LearningEnglishApk
     main.cpp
     src/MainWindow.cpp
     include/MainWindow.h
-    include/PracticeWindow.h
-    src/PracticeWindow.cpp
     ${RESOURCES}
 )
 
@@ -45,11 +43,11 @@ qt_add_qml_module(LearningEnglishApk
         qml/DifficultyWindow.qml
         qml/PracticeWindow.qml
     RESOURCES
-         android/assets/resources/dictionary_level5.xml
-         android/assets/resources/dictionary_level1.xml
-         android/assets/resources/dictionary_level2.xml
-         android/assets/resources/dictionary_level3.xml
-         android/assets/resources/dictionary_level4.xml
+         android/assets/resources/dictionary_level5.json
+         android/assets/resources/dictionary_level1.json
+         android/assets/resources/dictionary_level2.json
+         android/assets/resources/dictionary_level3.json
+         android/assets/resources/dictionary_level4.json
 
 )
 
