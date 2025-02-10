@@ -1,4 +1,3 @@
-// MainWindow.h
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -17,6 +16,7 @@ public slots:
     void openPracticeWindow();
     void openMemoryGame();
     void openLevel(int level, const QVariantMap& dictionary);  // פונקציה חדשה
+    void loadDictionaryFromFile(const QString& filePath);  // פונקציה חדשה
 
 private:
     QVariantMap m_currentDictionary;

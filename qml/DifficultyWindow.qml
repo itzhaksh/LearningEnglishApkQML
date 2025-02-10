@@ -1,5 +1,5 @@
-import QtQuick
-import QtQuick.Controls
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtQuick.Layouts
 
 ApplicationWindow {
@@ -8,26 +8,9 @@ ApplicationWindow {
     height: 500
     title: "Level Selection"
 
-    function loadDictionary(level) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "qrc:/dictionary_level" + level + ".json", true);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    var dictionary = JSON.parse(xhr.responseText);
-                    mainWindow.openLevel(level, dictionary);
-                } else {
-                    console.error("Failed to load dictionary for level", level);
-                }
-            }
-        }
-        xhr.send();
-    }
-
     Rectangle {
         anchors.fill: parent
         color: "#F7F7F7"
-
         ColumnLayout {
             anchors.centerIn: parent
             spacing: 10
@@ -40,48 +23,24 @@ ApplicationWindow {
                 Layout.alignment: Qt.AlignCenter
             }
 
-            Button {
-                text: "Level 1"
-                Layout.preferredWidth: 150
-                Layout.preferredHeight: 50
-                onClicked: {
-                    loadDictionary(1)
+            Repeater {
+                model: 5
+                delegate: Button {
+                    text: "Level " + (index + 1)
+                    Layout.preferredWidth: 150
+                    Layout.preferredHeight: 50
+                    onClicked: {
+                        console.log("Level " + (index + 1) + " clicked");
+                        stackView.push(practiceComponent.createObject(stackView, { level: index + 1 }));
+                    }
                 }
             }
 
-            Button {
-                text: "Level 2"
-                Layout.preferredWidth: 150
-                Layout.preferredHeight: 50
-                onClicked: {
-                    loadDictionary(2)
-                }
-            }
-
-            Button {
-                text: "Level 3"
-                Layout.preferredWidth: 150
-                Layout.preferredHeight: 50
-                onClicked: {
-                    loadDictionary(3)
-                }
-            }
-
-            Button {
-                text: "Level 4"
-                Layout.preferredWidth: 150
-                Layout.preferredHeight: 50
-                onClicked: {
-                    loadDictionary(4)
-                }
-            }
-
-            Button {
-                text: "Level 5"
-                Layout.preferredWidth: 150
-                Layout.preferredHeight: 50
-                onClicked: {
-                    loadDictionary(5)
+            Component {
+                id: practiceComponent
+                PracticeWindow {
+                    level: modelData.level
+                    onClosing: stackView.pop()
                 }
             }
 
@@ -89,9 +48,7 @@ ApplicationWindow {
                 text: "Back"
                 Layout.preferredWidth: 150
                 Layout.preferredHeight: 50
-                onClicked: {
-                    stackView.pop()
-                }
+                onClicked:stackView.pop()
             }
         }
     }

@@ -47,28 +47,28 @@ ApplicationWindow {
                         text: "Hebrew Mode"
                         Layout.preferredWidth: 150
                         Layout.preferredHeight: 100
-                        onClicked: stackView.push("qrc:/DifficultyWindow.qml")
+                        onClicked: stackView.push("qrc:/qml/DifficultyWindow.qml")
                     }
 
                     Button {
                         text: "English Mode"
                         Layout.preferredWidth: 150
                         Layout.preferredHeight: 100
-                        onClicked: stackView.push("qrc:/DifficultyWindow.qml")
+                        onClicked: stackView.push("qrc:/qml/DifficultyWindow.qml")
                     }
 
                     Button {
                         text: "Practice Mode"
                         Layout.preferredWidth: 150
                         Layout.preferredHeight: 100
-                        onClicked: stackView.push("qrc:/DifficultyWindow.qml")
+                        onClicked: stackView.push("qrc:/qml/DifficultyWindow.qml")
                     }
 
                     Button {
                         text: "Memory Game"
                         Layout.preferredWidth: 150
                         Layout.preferredHeight: 100
-                        onClicked: stackView.push("qrc:/DifficultyWindow.qml")
+                        onClicked: stackView.push("qrc:/qml/DifficultyWindow.qml")
                     }
                 }
 
