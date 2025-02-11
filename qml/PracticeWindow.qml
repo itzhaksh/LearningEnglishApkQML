@@ -74,7 +74,7 @@ ApplicationWindow {
     function loadWords(level) {
         console.log("Loading words for level:", level);
         var jsonData = wordDictionaries["level" + level];
-        console.log("JSON Data for level " + level + ":", jsonData); // Debug print
+        console.log("JSON Data for level " + level + ":", jsonData);
 
         if (!jsonData || jsonData === "{}") {
             console.error("JSON data is empty for level", level);

@@ -22,18 +22,8 @@ qt_add_resources(RESOURCES resources.qrc)
 
 qt_add_executable(LearningEnglishApk
     main.cpp
-    src/MainWindow.cpp
-    include/MainWindow.h
     ${RESOURCES}
 )
-
-# qt_add_qml_module(LearningEnglishApk
-#     URI LearningEnglishApk
-#     VERSION 1.0
-#     QML_FILES
-#         qml/Main.qml
-#         qml/DifficultyWindow.qml
-# )
 
 qt_add_qml_module(LearningEnglishApk
     URI LearningEnglishApk
@@ -42,6 +32,8 @@ qt_add_qml_module(LearningEnglishApk
         qml/Main.qml
         qml/DifficultyWindow.qml
         qml/PracticeWindow.qml
+        qml/GameWindow.qml
+        qml/MemoryGame.qml
     RESOURCES
          android/assets/resources/dictionary_level5.json
          android/assets/resources/dictionary_level1.json
@@ -50,7 +42,6 @@ qt_add_qml_module(LearningEnglishApk
          android/assets/resources/dictionary_level4.json
 
 )
-
 
 target_include_directories(LearningEnglishApk PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include

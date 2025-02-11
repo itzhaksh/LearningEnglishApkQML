@@ -1,13 +1,15 @@
 <RCC>
     <qresource prefix="/">
-        <file>qml/Main.qml</file>
-        <file>qml/DifficultyWindow.qml</file>
         <file alias="learn_english_background.png">android/assets/resources/learn_english_background.png</file>
         <file alias="dictionary_level1.json">android/assets/resources/dictionary_level1.json</file>
         <file alias="dictionary_level2.json">android/assets/resources/dictionary_level2.json</file>
         <file alias="dictionary_level3.json">android/assets/resources/dictionary_level3.json</file>
         <file alias="dictionary_level4.json">android/assets/resources/dictionary_level4.json</file>
         <file alias="dictionary_level5.json">android/assets/resources/dictionary_level5.json</file>
+        <file>qml/Main.qml</file>
+        <file>qml/DifficultyWindow.qml</file>
         <file>qml/PracticeWindow.qml</file>
+        <file>qml/GameWindow.qml</file>
+        <file>qml/MemoryGame.qml</file>
     </qresource>
 </RCC>

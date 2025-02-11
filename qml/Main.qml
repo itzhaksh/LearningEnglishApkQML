@@ -47,37 +47,58 @@ ApplicationWindow {
                         text: "Hebrew Mode"
                         Layout.preferredWidth: 150
                         Layout.preferredHeight: 100
-                        onClicked: stackView.push("qrc:/qml/DifficultyWindow.qml")
+                        onClicked: {
+                            console.log("Selected Hebrew Mode");
+                            stackView.push("qrc:/qml/DifficultyWindow.qml", {
+                                gameMode: "Hebrew"
+                            });
+                        }
                     }
 
                     Button {
                         text: "English Mode"
                         Layout.preferredWidth: 150
                         Layout.preferredHeight: 100
-                        onClicked: stackView.push("qrc:/qml/DifficultyWindow.qml")
+                        onClicked: {
+                            console.log("Selected English Mode");
+                            stackView.push("qrc:/qml/DifficultyWindow.qml", {
+                                gameMode: "English"
+                            });
+                        }
                     }
 
                     Button {
                         text: "Practice Mode"
                         Layout.preferredWidth: 150
                         Layout.preferredHeight: 100
-                        onClicked: stackView.push("qrc:/qml/DifficultyWindow.qml")
+                        onClicked: {
+                            console.log("Selected Practice Mode");
+                            stackView.push("qrc:/qml/DifficultyWindow.qml", {
+                                gameMode: "Practice"
+                            });
+                        }
                     }
 
                     Button {
                         text: "Memory Game"
                         Layout.preferredWidth: 150
                         Layout.preferredHeight: 100
-                        onClicked: stackView.push("qrc:/qml/DifficultyWindow.qml")
+                        onClicked: {
+                            console.log("Selected Memory Mode");
+                            stackView.push("qrc:/qml/DifficultyWindow.qml", {
+                                gameMode: "MemoryGame"
+                            });
+                        }
                     }
                 }
-
                 Button {
                     text: "Exit"
-                    Layout.preferredWidth: 180
-                    Layout.preferredHeight: 60
+                    Layout.preferredWidth: 200
+                    Layout.preferredHeight: 90
+                    Layout.alignment: Qt.AlignHCenter
                     onClicked: Qt.quit()
                 }
+
             }
         }
     }
