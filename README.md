@@ -13,7 +13,7 @@ It is designed for **Hebrew speakers** to expand their English vocabulary throug
 
 ## 🚀 Key Features
 
-✅ Game Modes: Translation, Practice, and Memory Game  
+✅ Game Modes: Translation, Practice, and Match Cards 
 ✅ Text-to-Speech Support for English and Hebrew  
 ✅ Real-time Feedback while you play  
 ✅ Clean UI optimized for touchscreens  
