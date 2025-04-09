@@ -81,10 +81,7 @@ It is designed for **Hebrew speakers** to expand their English vocabulary throug
 
 **No sound?**
 - Ensure `TextToSpeech` is working on your device
-- Check your device’s media volume
-
-**Missing vocabulary?**
-- Ensure the `resources/` folder and all `dictionary_levelX.json` files are bundled correctly with the APK  
+- Check your device’s media volume 
 
 ---
 
