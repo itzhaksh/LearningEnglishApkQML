@@ -47,7 +47,7 @@ It is designed for **Hebrew speakers** to expand their English vocabulary throug
 - Hear correct pronunciations  
 - Learn at your own pace  
 
-### 🔹 Memory Game
+### 🔹 Match Cards
 - Match Hebrew and English words  
 - Visual card interface  
 - Helps reinforce vocabulary through repetition  
