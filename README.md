@@ -1,7 +1,7 @@
 # 📱 Learn English - Android Version (QML)
 
 <p align="center">
-  <img src="resources/LearnEnglish.png" alt="Learn English App" width="300">
+  <img src="LearnEnglish.png" alt="Learn English App" width="300">
 </p>
 
 ## 📝 Overview
