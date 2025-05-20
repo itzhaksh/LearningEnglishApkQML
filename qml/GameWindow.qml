@@ -3,14 +3,13 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtTextToSpeech
 
-ApplicationWindow {
+Item {
     id: gameWindow
     visible: true
     width: 400
     height: 500
-    title: "Translation Game"
-
-    property string mode: "" // "Hebrew" or "English"
+    property var stackView
+    property string mode: "English"
     property int level: 1
     property int score: 0
     property int currentWordCount: 0
@@ -20,118 +19,34 @@ ApplicationWindow {
     property var voices: []
     property int selectedVoiceIndex: 0
 
-    TextToSpeech {
-        id: tts
-        onLocaleChanged: {
-            voices = availableVoices
-            updateVoiceButtons()
+    function removeHebrewDiacritics(text) {
+        return text.replace(/[\u0591-\u05C7]/g, "");
+    }
+
+    function setupQuestion() {
+        var keys = Object.keys(dictionary);
+        if (keys.length === 0) {
+            questionLabel.text = "No questions available";
+            return;
         }
+
+        currentQuestion = keys[Math.floor(Math.random() * keys.length)];
+        correctAnswer = dictionary[currentQuestion];
+
+        questionLabel.text = mode === "Hebrew" ? correctAnswer : currentQuestion;
+        answerField.text = "";
+
+        // Use a Timer to delay playAudio until TTS is ready
+        timer.start();
     }
 
     Timer {
-        id: keyboardDebounceTimer
-        interval: 200
+        id: timer
+        interval: 250 // Short delay
+        running: false
         repeat: false
-        onTriggered: checkKeyboardLanguage()
-    }
-
-    Rectangle {
-        anchors.fill: parent
-        color: "#F7F7F7"
-
-        ColumnLayout {
-            anchors.fill: parent
-            anchors.margins: 20
-            spacing: 15
-
-            Label {
-                id: questionLabel
-                Layout.alignment: Qt.AlignCenter
-                font.pixelSize: 26
-                color: "white"
-                padding: 15
-                background: Rectangle {
-                    color: "#7f5af0"
-                    radius: 10
-                    border.width: 3
-                    border.color: "white"
-                }
-                Layout.preferredWidth: parent.width - 40
-                Layout.preferredHeight: 60
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-            }
-
-            TextField {
-                id: answerField
-                Layout.fillWidth: true
-                Layout.preferredHeight: 50
-                placeholderText: mode === "Hebrew" ? "הקלד את התרגום..." : "Type your translation here..."
-                background: Rectangle {
-                    color: "#7f5af0"
-                    radius: 5
-                    border.width: 1
-                    border.color: "white"
-                }
-                color: "white"
-                onTextChanged: {
-                    if (text.length % 3 === 0) {
-                        keyboardDebounceTimer.restart()
-                    }
-                }
-            }
-
-            Label {
-                id: feedbackLabel
-                Layout.alignment: Qt.AlignCenter
-                font.pixelSize: 18
-                wrapMode: Text.WordWrap
-            }
-
-            Label {
-                id: scoreLabel
-                text: "Score: " + score
-                font.pixelSize: 22
-                color: "#4A90E2"
-                Layout.alignment: Qt.AlignCenter
-            }
-
-            RowLayout {
-                Layout.alignment: Qt.AlignCenter
-                spacing: 10
-
-                Button {
-                    text: "🔊 Play Word"
-                    onClicked: playAudio()
-                    Layout.preferredWidth: 120
-                }
-
-                Button {
-                    text: "Check Answer"
-                    onClicked: checkAnswer()
-                    Layout.preferredWidth: 120
-                }
-            }
-
-            Button {
-                text: "Show Answer"
-                Layout.alignment: Qt.AlignCenter
-                Layout.preferredWidth: 120
-                onClicked: revealAnswer()
-            }
-
-            GridLayout {
-                id: voiceButtonsGrid
-                Layout.alignment: Qt.AlignCenter
-                columns: mode === "English" ? 3 : 1
-            }
-
-            Button {
-                text: "Back"
-                Layout.alignment: Qt.AlignCenter
-                Layout.preferredWidth: 120
-                onClicked: stackView.pop()
-            }
+        onTriggered: {
+            playAudio();
         }
     }
 
@@ -158,19 +73,15 @@ ApplicationWindow {
         }
     }
 
-    function setupQuestion() {
-        var keys = Object.keys(dictionary);
-        if (keys.length === 0) {
-            questionLabel.text = "No questions available";
-            return;
-        }
+    Component.onCompleted: {
+        loadDictionary();
+    }
 
-        currentQuestion = keys[Math.floor(Math.random() * keys.length)];
-        correctAnswer = dictionary[currentQuestion];
-
-        questionLabel.text = mode === "Hebrew" ? correctAnswer : currentQuestion;
-        answerField.text = "";
-        playAudio();
+    function revealAnswer() {
+        var answer = mode === "Hebrew" ? currentQuestion : correctAnswer;
+        feedbackLabel.text = "The answer is: " + answer;
+        feedbackLabel.color = "#7f5af0";
+        answerField.text = answer;
     }
 
     function checkAnswer() {
@@ -202,72 +113,188 @@ ApplicationWindow {
         answerField.text = "";
     }
 
-    function showLevelComplete() {
-        var dialog = dialogComponent.createObject(gameWindow, {
-            text: "Congratulations! You've completed Level " + level + 
-                  "\nFinal Score: " + score + "/" + Object.keys(dictionary).length
-        });
-        dialog.accepted.connect(function() {
-            stackView.pop();
-        });
-        dialog.open();
+    TextToSpeech {
+        id: tts
+        locale: mode === "Hebrew" ? Qt.locale("he_IL") : Qt.locale("en_US")
+
+        onLocaleChanged: {
+            console.log("Locale changed to:", locale);
+            loadVoices();
+        }
+
+        Component.onCompleted: {
+            loadVoices();
+        }
     }
 
-    function removeHebrewDiacritics(text) {
-        return text.replace(/[\u0591-\u05C7]/g, "");
+    function loadVoices() {
+        voices = tts.availableVoices;
+        console.log("Available voices:", voices.length, "for locale:", tts.locale);
+        if (voices.length > 0) {
+            console.log("Voices loaded successfully:", voices);
+        } else {
+            console.log("No voices available for locale:", tts.locale);
+        }
     }
 
     function playAudio() {
         var wordToSpeak = mode === "Hebrew" ? correctAnswer : currentQuestion;
         if (wordToSpeak) {
+            tts.locale = mode === "Hebrew" ? Qt.locale("he_IL") : Qt.locale("en_US");
+
+            var selectedVoice = null;
+            for (var i = 0; i < voices.length; i++) {
+                if (voices[i].locale.name === tts.locale.name) {
+                    selectedVoice = voices[i];
+                    break;
+                }
+            }
+
+            if (selectedVoice) {
+                tts.voice = selectedVoice;
+            } else {
+                console.warn("No suitable voice found for locale:", tts.locale);
+                if (voices.length > 0) {
+                    tts.voice = voices[0];
+                    console.warn("Falling back to default voice");
+                }
+            }
+
+            console.log("Speaking:", wordToSpeak, "using locale:", tts.locale, "and voice:", tts.voice ? tts.voice.name : "default");
             tts.say(wordToSpeak);
         }
     }
 
-    function revealAnswer() {
-        var answer = mode === "Hebrew" ? currentQuestion : correctAnswer;
-        feedbackLabel.text = "The answer is: " + answer;
-        feedbackLabel.color = "#7f5af0";
-        answerField.text = answer;
+    function setMode(newMode) {
+        mode = newMode;
+        tts.locale = mode === "Hebrew" ? Qt.locale("he_IL") : Qt.locale("en_US");
+        loadDictionary();
     }
 
-    function checkKeyboardLanguage() {
-        if (answerField.text === "") return;
-        
-        var lastChar = answerField.text.charAt(answerField.text.length - 1);
-        var isHebrew = /[\u0590-\u05FF]/.test(lastChar);
-        var isWrongKeyboard = (mode === "Hebrew" && isHebrew) || 
-                             (mode === "English" && !isHebrew);
-
-        if (isWrongKeyboard) {
-            feedbackLabel.text = mode === "Hebrew" ? 
-                "Please switch to English keyboard" : 
-                "נא החלף למקלדת עברית";
-            feedbackLabel.color = "#4A90E2";
-        } else {
-            feedbackLabel.text = "";
-        }
+    function showLevelComplete() {
+        console.log("Level Complete!");
+        level++;
+        currentWordCount = 0;
+        loadDictionary();
     }
 
-    Component {
-        id: dialogComponent
-        Dialog {
-            property alias text: messageLabel.text
-            anchors.centerIn: parent
-            modal: true
-            standardButtons: Dialog.Ok
-            
+    Rectangle {
+        anchors.fill: parent
+        color: "#F7F7F7"
+
+        ColumnLayout {
+            anchors.top: parent.top
+            anchors.topMargin: 20
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing: 10
+            width: parent.width * 0.8
+
             Label {
-                id: messageLabel
+                id: questionLabel
+                Layout.alignment: Qt.AlignCenter
+                font.pixelSize: 26
+                color: "white"
+                padding: 15
+                background: Rectangle {
+                    color: "#7f5af0"
+                    radius: 10
+                    border.width: 3
+                    border.color: "white"
+                }
+                Layout.preferredWidth: parent.width - 40
+                Layout.preferredHeight: 60
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        playAudio();
+                    }
+                }
+            }
+
+            TextField {
+                id: answerField
+                Layout.fillWidth: true
+                Layout.preferredHeight: 50
+                placeholderText: mode === "Hebrew" ? "הקלד את התרגום..." : "Type your translation here..."
+                background: Rectangle {
+                    color: "#7f5af0"
+                    radius: 5
+                    border.width: 1
+                    border.color: "white"
+                }
+                color: "white"
+                selectByMouse: true
+                selectedTextColor: "white"
+                selectionColor: "#4A90E2"
+                onFocusChanged: {
+                    if (focus) {
+                        placeholderText = "";
+                    } else {
+                        placeholderText = mode === "Hebrew" ? "הקלד את התרגום..." : "Type your translation here...";
+                    }
+                }
+            }
+
+            Label {
+                id: feedbackLabel
+                Layout.alignment: Qt.AlignCenter
+                font.pixelSize: 18
                 wrapMode: Text.WordWrap
+            }
+
+            Label {
+                id: scoreLabel
+                text: "Score: " + score
+                font.pixelSize: 22
+                color: "#4A90E2"
+                Layout.alignment: Qt.AlignCenter
+            }
+
+            Button {
+                text: "Check Answer"
+                Layout.alignment: Qt.AlignCenter
+                Layout.preferredWidth: 200
+                Layout.preferredHeight: 60
+                onClicked: checkAnswer()
+                background: Rectangle {
+                    color: "#4A90E2"
+                    radius: 10
+                }
+                contentItem: Text {
+                    text: parent.text
+                    color: "white"
+                    font.pixelSize: 18
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
+            }
+
+            Button {
+                id: showAnswerButton
+                text: "Show Answer"
+                Layout.alignment: Qt.AlignCenter
+                Layout.preferredWidth: 200
+                Layout.preferredHeight: 60
+                onClicked: revealAnswer()
+                background: Rectangle {
+                    color: "#4A90E2"
+                    radius: 10
+                }
+                contentItem: Text {
+                    text: parent.text
+                    color: "white"
+                    font.pixelSize: 18
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
             }
         }
     }
 
-    Component.onCompleted: {
-        tts.locale = mode === "Hebrew" ? 
-            Qt.locale("he_IL") : 
-            Qt.locale("en_US");
-        loadDictionary();
+    Keys.onBackPressed: {
+        stackView.pop();
     }
 }

@@ -1,6 +1,6 @@
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
-import QtQuick.Controls 2.15
 
 ApplicationWindow {
     visible: true
@@ -17,7 +17,8 @@ ApplicationWindow {
     Component {
         id: mainMenu
         Rectangle {
-            anchors.fill: parent
+            width: parent ? parent.width : 420
+            height: parent ? parent.height : 420
             color: "#F7F7F7"
 
             ColumnLayout {
@@ -49,9 +50,7 @@ ApplicationWindow {
                         Layout.preferredHeight: 100
                         onClicked: {
                             console.log("Selected Hebrew Mode");
-                            stackView.push("qrc:/qml/DifficultyWindow.qml", {
-                                gameMode: "Hebrew"
-                            });
+                            stackView.push(difficultyWindowComponent, { gameMode: "Hebrew", stackView: stackView }); // Pass stackView
                         }
                     }
 
@@ -61,9 +60,7 @@ ApplicationWindow {
                         Layout.preferredHeight: 100
                         onClicked: {
                             console.log("Selected English Mode");
-                            stackView.push("qrc:/qml/DifficultyWindow.qml", {
-                                gameMode: "English"
-                            });
+                            stackView.push(difficultyWindowComponent, { gameMode: "English", stackView: stackView }); // Pass stackView
                         }
                     }
 
@@ -73,24 +70,21 @@ ApplicationWindow {
                         Layout.preferredHeight: 100
                         onClicked: {
                             console.log("Selected Practice Mode");
-                            stackView.push("qrc:/qml/DifficultyWindow.qml", {
-                                gameMode: "Practice"
-                            });
+                            stackView.push(difficultyWindowComponent, { gameMode: "Practice", stackView: stackView }); // Pass stackView
                         }
                     }
 
                     Button {
-                        text: "Memory Game"
+                        text: "Match Cards"
                         Layout.preferredWidth: 150
                         Layout.preferredHeight: 100
                         onClicked: {
-                            console.log("Selected Memory Mode");
-                            stackView.push("qrc:/qml/DifficultyWindow.qml", {
-                                gameMode: "MemoryGame"
-                            });
+                            console.log("Selected Match Cards Mode");
+                            stackView.push(difficultyWindowComponent, { gameMode: "Match Cards", stackView: stackView }); // Pass stackView
                         }
                     }
                 }
+
                 Button {
                     text: "Exit"
                     Layout.preferredWidth: 200
@@ -98,8 +92,35 @@ ApplicationWindow {
                     Layout.alignment: Qt.AlignHCenter
                     onClicked: Qt.quit()
                 }
-
             }
         }
     }
-}
+
+    Component {
+        id: gameWindowComponent
+        GameWindow {
+            anchors.fill: parent
+        }
+    }
+
+    Component {
+        id: matchcardsComponent
+        MatchCards {
+            anchors.fill: parent
+        }
+    }
+
+    Component {
+        id: practiceWindowComponent
+        PracticeWindow {
+            anchors.fill: parent
+        }
+    }
+    Component {
+        id: difficultyWindowComponent
+        DifficultyWindow {
+            anchors.fill: parent
+        }
+    }
+          }
+

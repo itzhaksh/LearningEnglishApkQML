@@ -1,4 +1,0 @@
-# qml/qmldir
-module LearningEnglishApk
-Main 1.0 Main.qml
-DifficultyWindow 1.0 DifficultyWindow.qml

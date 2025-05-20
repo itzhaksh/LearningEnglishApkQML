@@ -33,7 +33,7 @@ qt_add_qml_module(LearningEnglishApk
         qml/DifficultyWindow.qml
         qml/PracticeWindow.qml
         qml/GameWindow.qml
-        qml/MemoryGame.qml
+        qml/MatchCards.qml
     RESOURCES
          android/assets/resources/dictionary_level5.json
          android/assets/resources/dictionary_level1.json
